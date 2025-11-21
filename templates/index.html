@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Search | AI Image Matcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a href="https://techtics.ai" target="_blank" rel="noopener noreferrer">
+                    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Logo" class="header-logo">
+                </a>
+                <div class="header-text">
+                    <h1>Feature Search</h1>
+                    <div class="subtitle">Advanced Image Matching with Region Selection</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Upload Section with Canvas -->
+        <div class="card">
+            <div class="upload-section" id="uploadSection">
+                <div class="drop-zone" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Drop an image here or click to upload</span>
+                        <span id="fileName" style="font-size: 0.875rem; color: var(--primary);"></span>
+                    </div>
+                </div>
+
+                <!-- Canvas for bbox drawing -->
+                <div class="canvas-container" id="canvasContainer" style="display: none;">
+                    <canvas id="imageCanvas"></canvas>
+                    <canvas id="drawCanvas"></canvas>
+                    <canvas id="bboxCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="options" id="optionsSection" style="display: none;">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" name="disable_viz" id="disableViz">
+                    <span>Disable Real-time Visualization</span>
+                </label>
+
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" name="use_sift" id="useSift">
+                    <span>Enable High Accuracy Mode</span>
+                </label>
+
+                <button id="processBtn" class="process-btn">Process</button>
+            </div>
+
+            <div class="hint-text" id="hintText" style="display: none;">
+                <p>💡 <strong>Tip:</strong> Click anywhere on the image to select the entire image, or draw a bounding
+                    box around a specific region</p>
+            </div>
+        </div>
+
+        <!-- Extracted Region Preview -->
+        <div class="card" id="extractedCard" style="display: none;">
+            <h3>Selected Region</h3>
+            <canvas id="extractedCanvas"></canvas>
+        </div>
+
+        <!-- Loading/Processing -->
+        <div id="loading" class="loading">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="animate-spin">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+            </svg>
+            <span>Processing image features...</span>
+
+            <div id="video-container" style="display:none; margin-top: 1rem;">
+                <p style="margin-bottom: 0.5rem; font-size: 0.9rem;">Real-time Visualization:</p>
+                <img id="video-stream"
+                    style="max-width: 100%; max-height: 400px; border: 1px solid var(--border); border-radius: 0.5rem;">
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" style="display: none;">
+            <div class="card">
+                <h3>Best Match Visualization</h3>
+                <img id="bestMatchImage" class="result-image" style="max-width: 100%;">
+            </div>
+
+            <div class="card">
+                <h3>Match Details</h3>
+                <ul class="stats-list">
+                    <li class="stat-item">
+                        <span>Best Match</span>
+                        <span class="badge" id="bestMatchName"></span>
+                    </li>
+                    <li class="stat-item">
+                        <span>Score</span>
+                        <span id="bestMatchScore"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card" id="topMatchesCard">
+                <h3>Top Matches</h3>
+                <div class="top-matches-grid" id="topMatchesGrid"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Powered by <a href="https://techtics.ai" target="_blank" rel="noopener noreferrer">techtics.ai</a></p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='bbox-drawing.js') }}"></script>
+</body>
+
+</html>
