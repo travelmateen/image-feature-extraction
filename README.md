@@ -1,5 +1,5 @@
 ---
-title: Feature Search - AI Image Matcher
+title: Feature Search
 emoji: 🔍
 colorFrom: blue
 colorTo: purple
